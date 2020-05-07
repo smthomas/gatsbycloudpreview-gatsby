@@ -32,4 +32,28 @@ exports.createPages = async ({ actions, graphql }) => {
       },
     })
   );
+
+  const pressreleases = await graphql(`
+    {
+      allNodePressRelease {
+        nodes {
+          id
+          title
+          path {
+            alias
+          }
+        }
+      }
+    }
+  `);
+
+  pressreleases.data.allNodePressRelease.nodes.map(prData =>
+    createPage({
+      path: prData.path.alias,
+      component: path.resolve(`src/templates/pressrelease.js`),
+      context: {
+        PRId: prData.id,
+      },
+    })
+  );
 }
